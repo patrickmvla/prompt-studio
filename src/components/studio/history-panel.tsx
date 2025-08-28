@@ -56,8 +56,8 @@ export const HistoryPanel = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm">
-          <History className="mr-2 h-4 w-4" />
+        <Button variant="link" size="sm" className="text-white">
+          <History className="mr-2 h-4 w-4 text-white" />
           History ({history.length})
         </Button>
       </SheetTrigger>

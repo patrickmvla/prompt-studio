@@ -5,7 +5,7 @@ import { HeroSection } from "@/components/hero-section";
 import { HowItWorksSection } from "@/components/how-it-works-section";
 
 const Home = () => {
-return (
+  return (
     <div className="flex flex-col min-h-screen bg-[#0A0A0A] text-gray-200 font-sans">
       <Header />
       <main className="flex-grow">
@@ -16,6 +16,6 @@ return (
       <Footer />
     </div>
   );
-}
- 
+};
+
 export default Home;

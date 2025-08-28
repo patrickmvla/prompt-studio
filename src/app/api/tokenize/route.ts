@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { encode } from "gpt-3-encoder";
+import { getEncoding } from "js-tiktoken";
+
+const encoding = getEncoding("cl100k_base");
 
 export const runtime = "edge";
 
@@ -14,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const tokens = encode(text);
+    const tokens = encoding.encode(text);
     const tokenCount = tokens.length;
 
     return NextResponse.json({ tokenCount });

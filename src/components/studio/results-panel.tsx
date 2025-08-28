@@ -1,8 +1,13 @@
-"use client"
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Constraint,
+  ConstraintCheck,
+  TestCase,
+  TestResult,
+  usePromptStore,
+} from "@/lib/store/prompt-store";
 import {
   CheckCircle,
   Loader2,
@@ -12,15 +17,7 @@ import {
   ShieldX,
   XCircle,
 } from "lucide-react";
-import {
-  Constraint,
-  ConstraintCheck,
-  TestCase,
-  TestResult,
-  usePromptStore,
-} from "../../lib/store/prompt-store";
 
-// Helper function to check constraints against the output
 const checkConstraints = (
   output: string,
   constraints: Constraint[]
@@ -57,8 +54,6 @@ const ResultCard = ({
   testCase: TestCase;
   result: TestResult;
 }) => {
-  // const constraints = usePromptStore((state) => state.constraints);
-
   const getStatusIcon = () => {
     if (result.status === "running")
       return <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />;
@@ -156,17 +151,27 @@ export const ResultsPanel = () => {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        let finalOutput = "";
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
+
           const chunk = decoder.decode(value);
-          finalOutput += chunk;
-          updateResultOutput(testCase.id, chunk);
+
+          try {
+            const json = JSON.parse(chunk);
+            const content = json.choices[0]?.delta?.content || "";
+            if (content) {
+              updateResultOutput(testCase.id, content);
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (e) {
+            console.warn("Could not parse stream chunk as JSON:", chunk);
+          }
         }
 
-        // --- Analysis Step ---
+        const finalOutput = results.get(testCase.id)?.output || "";
+
         const constraintChecks = checkConstraints(finalOutput, constraints);
         setResult(testCase.id, { constraintChecks });
 

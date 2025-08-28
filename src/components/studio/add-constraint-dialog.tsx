@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -34,13 +34,11 @@ export const AddConstraintDialog = ({
 
   const handleSubmit = () => {
     if (!type || value === "") {
-      // Basic validation: In a real app, show a toast or error message
       return;
     }
 
     addConstraint({ type, value });
 
-    // Reset state and close dialog
     setType("");
     setValue("");
     setIsOpen(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { Save, PlusCircle, Loader2, Download } from "lucide-react";
+import { Save, PlusCircle, Loader2, Download, ToyBrick } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,7 @@ import {
 import { usePromptStore } from "../../lib/store/prompt-store";
 import { useEffect } from "react";
 import { HistoryPanel } from "./history-panel";
-import YAML from "yaml"; // You'll need to run: npm install yaml
+import YAML from "yaml";
 
 const SaveButton = () => {
   const saveStatus = usePromptStore((state) => state.saveStatus);
@@ -81,7 +81,11 @@ const ExportButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="link"
+          size="sm"
+          className="text-white hover:bg-gray-800"
+        >
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>
@@ -121,12 +125,22 @@ export const StudioHeader = () => {
   }, [savePrompt, saveStatus]);
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-800 bg-[#101010] px-4">
-      <div>{/* We can add breadcrumbs or project title here later */}</div>
+    <header className="flex h-14 items-center justify-between border-b border-gray-800 bg-[#101010] px-4 py-2">
       <div className="flex items-center gap-2">
+        <ToyBrick className="h-6 w-6 text-indigo-400" />
+        <span className="font-semibold text-lg text-gray-50">
+          Prompt Studio
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
         <HistoryPanel />
         <ExportButton />
-        <Button variant="outline" size="sm" onClick={resetPrompt}>
+        <Button
+          variant="link"
+          size="sm"
+          className="text-white hover:bg-gray-800"
+          onClick={resetPrompt}
+        >
           <PlusCircle className="mr-2 h-4 w-4" />
           New Prompt
         </Button>

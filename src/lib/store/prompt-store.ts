@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-// --- TYPE DEFINITIONS ---
 export interface Constraint {
   id: string;
   type: "wordLimit" | "jsonOnly" | "forbiddenPhrase";
@@ -34,7 +33,6 @@ export interface TestResult {
 
 type SaveStatus = "unsaved" | "saving" | "saved";
 
-// A snapshot of the entire prompt state at a point in time
 export interface HistorySnapshot {
   id: string;
   timestamp: Date;
@@ -45,7 +43,6 @@ export interface HistorySnapshot {
   results: Map<string, TestResult>;
 }
 
-// --- STORE STATE AND ACTIONS ---
 interface PromptState {
   // Data
   promptId: string | null;
@@ -85,7 +82,6 @@ interface PromptState {
   addHistorySnapshot: () => void;
 }
 
-// --- STORE IMPLEMENTATION ---
 const initialState = {
   promptId: null,
   systemRole: "",
@@ -103,7 +99,6 @@ const initialState = {
 export const usePromptStore = create<PromptState>((set, get) => ({
   ...initialState,
 
-  // --- MUTATORS ---
   setSystemRole: (role) => set({ systemRole: role, saveStatus: "unsaved" }),
   setInstruction: (instruction) => set({ instruction, saveStatus: "unsaved" }),
 
@@ -146,7 +141,6 @@ export const usePromptStore = create<PromptState>((set, get) => ({
       saveStatus: "unsaved",
     })),
 
-  // --- TEST RUN ACTIONS ---
   startTestRun: () => {
     const { testCases } = get();
     const initialResults = new Map<string, TestResult>();
@@ -185,7 +179,6 @@ export const usePromptStore = create<PromptState>((set, get) => ({
       return { results: newResults };
     }),
 
-  // --- DATABASE ACTIONS ---
   savePrompt: async () => {
     const {
       promptId,
@@ -240,7 +233,7 @@ export const usePromptStore = create<PromptState>((set, get) => ({
       const data = await response.json();
 
       set({
-        ...initialState, // Reset everything first
+        ...initialState,
         promptId: data.id,
         systemRole: data.systemRole || "",
         instruction: data.instruction || "",
@@ -257,7 +250,6 @@ export const usePromptStore = create<PromptState>((set, get) => ({
 
   resetPrompt: () => set(initialState),
 
-  // --- ANALYSIS & HISTORY ACTIONS ---
   updateTokenCount: async () => {
     const { systemRole, instruction } = get();
     const fullText = `${systemRole} ${instruction}`;

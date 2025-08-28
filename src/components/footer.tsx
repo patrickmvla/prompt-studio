@@ -15,13 +15,13 @@ export const Footer = () => {
           </div>
           <div className="flex items-center space-x-6">
             <Link
-              href="#"
+              href="https://x.com/patrickmvla"
               className="text-sm text-gray-400 hover:text-gray-100 transition-colors"
             >
               Twitter
             </Link>
             <Link
-              href="#"
+              href="https://github.com/patrickmvla"
               className="text-sm text-gray-400 hover:text-gray-100 transition-colors"
             >
               GitHub

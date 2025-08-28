@@ -27,13 +27,11 @@ export const AddTestCaseDialog = ({
 
   const handleSubmit = () => {
     if (!name || !input) {
-      // Add more robust validation/toast later
       return;
     }
 
     addTestCase({ name, input, expectedOutput: expectedOutput || undefined });
 
-    // Reset state and close dialog
     setName("");
     setInput("");
     setExpectedOutput("");

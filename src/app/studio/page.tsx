@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   ResizableHandle,
@@ -12,7 +12,7 @@ import { ResultsPanel } from "@/components/studio/results-panel";
 
 const StudioPage = () => {
   return (
-    <div className="h-screen w-screen bg-[#0A0A0A] text-gray-200 flex flex-col">
+    <div className="h-screen w-screen bg-[#0A0A0A] text-gray-200 flex flex-col ">
       <StudioHeader />
       <div className="flex-grow">
         <ResizablePanelGroup direction="horizontal" className="h-full w-full">

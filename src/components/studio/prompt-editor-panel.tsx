@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, X } from "lucide-react";
 import { usePromptStore, Constraint, Example } from "@/lib/store/prompt-store";
-import { AddConstraintDialog } from "@/components/studio/add-constraint-dialog";
-import { AddExampleDialog } from "@/components/studio/add-example-dialog";
-import { PromptAnalysisBar } from "@/components/studio/prompt-analysis-bar";
+import { AddConstraintDialog } from "./add-constraint-dialog";
+import { AddExampleDialog } from "./add-example-dialog";
+import { PromptAnalysisBar } from "./prompt-analysis-bar";
 
 const ConstraintPill = ({ constraint }: { constraint: Constraint }) => {
   const removeConstraint = usePromptStore((state) => state.removeConstraint);
@@ -97,7 +97,7 @@ export const PromptEditorPanel = () => {
           <CardContent>
             <Textarea
               placeholder="e.g., You are a helpful assistant that provides concise answers."
-              className="bg-gray-900 border-gray-700 focus:ring-indigo-500"
+              className="bg-gray-900 border-gray-700 text-gray-200 focus:ring-indigo-500"
               value={systemRole}
               onChange={(e) => setSystemRole(e.target.value)}
             />
@@ -114,7 +114,7 @@ export const PromptEditorPanel = () => {
           <CardContent>
             <Textarea
               placeholder="e.g., Summarize the following text..."
-              className="bg-gray-900 border-gray-700 focus:ring-indigo-500 min-h-[150px]"
+              className="bg-gray-900 border-gray-700 text-gray-200 focus:ring-indigo-500 min-h-[150px]"
               value={instruction}
               onChange={(e) => setInstruction(e.target.value)}
             />

@@ -4,7 +4,6 @@ import { prompts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-// Zod schema for validating the incoming prompt data
 const promptSchema = z.object({
   systemRole: z.string().optional(),
   instruction: z.string().optional(),
@@ -13,7 +12,6 @@ const promptSchema = z.object({
   testCases: z.array(z.any()).optional(),
 });
 
-// API handler for creating a new prompt
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -37,7 +35,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// API handler for updating an existing prompt
 export async function PUT(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

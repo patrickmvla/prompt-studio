@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePromptStore } from "../../lib/store/prompt-store";
+import { usePromptStore } from "@/lib/store/prompt-store";
 import { Coins, ToyBrick } from "lucide-react";
 
-// A rough cost estimate per 1 million tokens for Llama 3 70B on Groq
 const COST_PER_MILLION_TOKENS = 0.59;
 
 export const PromptAnalysisBar = () => {

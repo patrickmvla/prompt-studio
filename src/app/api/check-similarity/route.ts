@@ -1,84 +1,100 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import { getEncoding } from "js-tiktoken";
 
-// IMPORTANT: Make sure to set the JINA_API_KEY environment variable
 const JINA_API_KEY = process.env.JINA_API_KEY;
-const JINA_API_URL = 'https://api.jina.ai/v1/embeddings';
+const JINA_API_URL = "https://api.jina.ai/v1/embeddings";
+const MAX_TOKENS_PER_INPUT = 4000;
+const encoding = getEncoding("cl100k_base");
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
-// Function to calculate cosine similarity between two vectors
 function cosineSimilarity(vecA: number[], vecB: number[]): number {
-  if (vecA.length !== vecB.length) {
-    throw new Error('Vectors must be of the same length');
-  }
-
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
-
+  if (vecA.length !== vecB.length) return 0;
+  let dotProduct = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < vecA.length; i++) {
     dotProduct += vecA[i] * vecB[i];
     normA += vecA[i] * vecA[i];
     normB += vecB[i] * vecB[i];
   }
-
-  if (normA === 0 || normB === 0) {
-    return 0; // Avoid division by zero
-  }
-
+  if (normA === 0 || normB === 0) return 0;
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-// Function to get embeddings from Jina AI
 async function getEmbeddings(texts: string[]): Promise<number[][]> {
-  if (!JINA_API_KEY) {
-    throw new Error('JINA_API_KEY environment variable is not set.');
-  }
+  if (!JINA_API_KEY)
+    throw new Error("JINA_API_KEY environment variable is not set.");
 
   const response = await fetch(JINA_API_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${JINA_API_KEY}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${JINA_API_KEY}`,
     },
     body: JSON.stringify({
       input: texts,
-      model: 'jina-embeddings-v2-base-en',
+      model: "jina-embeddings-v2-base-en",
     }),
   });
 
   if (!response.ok) {
     const errorBody = await response.text();
-    console.error('Jina API Error:', errorBody);
+    console.error("Jina API Error:", errorBody);
     throw new Error(`Jina API failed with status: ${response.status}`);
   }
 
   const data = await response.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data.data.map((item: any) => item.embedding);
 }
 
+// Helper to truncate text to a max number of tokens using tiktoken
+function truncateTextByTokens(text: string, maxTokens: number): string {
+  const tokens = encoding.encode(text);
+  if (tokens.length <= maxTokens) {
+    return text;
+  }
+
+  const truncatedTokens = tokens.slice(0, maxTokens);
+
+  return encoding.decode(truncatedTokens);
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { actualOutput, expectedOutput } = await req.json();
 
     if (!actualOutput || !expectedOutput) {
-      return NextResponse.json({ error: 'Missing actualOutput or expectedOutput' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing actualOutput or expectedOutput" },
+        { status: 400 }
+      );
     }
 
-    // Get embeddings for both texts in a single API call
-    const [actualEmbedding, expectedEmbedding] = await getEmbeddings([
+    const truncatedActual = truncateTextByTokens(
       actualOutput,
+      MAX_TOKENS_PER_INPUT
+    );
+    const truncatedExpected = truncateTextByTokens(
       expectedOutput,
+      MAX_TOKENS_PER_INPUT
+    );
+
+    const [actualEmbedding, expectedEmbedding] = await getEmbeddings([
+      truncatedActual,
+      truncatedExpected,
     ]);
 
-    // Calculate cosine similarity between the two embeddings
     const similarity = cosineSimilarity(actualEmbedding, expectedEmbedding);
 
     return NextResponse.json({ similarity });
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.error('Error in check-similarity API:', error);
-    return NextResponse.json({ error: error.message || 'Failed to check similarity' }, { status: 500 });
+    console.error("Error in check-similarity API:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to check similarity" },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,5 @@
-import Link from 'next/link';
-import { ToyBrick } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Assuming Shadcn UI setup
+import { ToyBrick } from "lucide-react";
+import Link from "next/link";
 
 export function Header() {
   return (
@@ -10,21 +9,11 @@ export function Header() {
           <ToyBrick className="h-6 w-6 text-indigo-400" />
           <span className="font-bold text-xl text-gray-50">Prompt Studio</span>
         </Link>
-        <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
-          <Link href="#features" className="text-gray-400 hover:text-gray-100 transition-colors">
-            Features
-          </Link>
-          <Link href="/docs" className="text-gray-400 hover:text-gray-100 transition-colors">
-            Docs
-          </Link>
-          <Link href="/blog" className="text-gray-400 hover:text-gray-100 transition-colors">
-            Blog
-          </Link>
-        </nav>
+
         <div className="flex items-center">
-           <Button variant="secondary" size="sm">
+          {/* <Button variant="secondary" size="sm">
             Sign In
-          </Button>
+          </Button> */}
         </div>
       </div>
     </header>
