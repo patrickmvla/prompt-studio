@@ -1,4 +1,4 @@
-Prompt Studio
+🚀 Prompt Studio
 Tagline: "Build bulletproof prompts that make LLMs follow instructions to the letter."
 
 Overview
@@ -138,3 +138,6 @@ Once complete, it will also display a Strictness Score (how well it followed you
 Save Your Work:
 
 Click the "Save" button in the header to save your entire session to the database. The URL will update with a unique ID for your saved prompt.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
