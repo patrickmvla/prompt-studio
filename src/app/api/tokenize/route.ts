@@ -3,7 +3,7 @@ import { getEncoding } from "js-tiktoken";
 
 const encoding = getEncoding("cl100k_base");
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
