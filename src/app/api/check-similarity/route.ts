@@ -6,7 +6,7 @@ const JINA_API_URL = "https://api.jina.ai/v1/embeddings";
 const MAX_TOKENS_PER_INPUT = 4000;
 const encoding = getEncoding("cl100k_base");
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 function cosineSimilarity(vecA: number[], vecB: number[]): number {
   if (vecA.length !== vecB.length) return 0;
